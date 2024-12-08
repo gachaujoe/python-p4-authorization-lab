@@ -1,56 +1,71 @@
 #!/usr/bin/env python3
 
-from random import randint, choice as rc
+# from random import randint, choice as rc
 
-from faker import Faker
+# from faker import Faker
 
-from app import app
-from models import db, Article, User
+# from app import app
+# from models import db, Article, User
+# # from app import db
+# # from models import User
 
-fake = Faker()
+# fake = Faker()
 
-with app.app_context():
+# with app.app_context():
 
-    print("Deleting all records...")
-    Article.query.delete()
-    User.query.delete()
+#     print("Deleting all records...")
+#     Article.query.delete()
+#     User.query.delete()
 
-    fake = Faker()
+#     fake = Faker()
 
-    print("Creating users...")
-    users = []
-    usernames = []
-    for i in range(25):
+#     print("Creating users...")
+#     users = []
+#     usernames = []
+#     for i in range(25):
 
-        username = fake.first_name()
-        while username in usernames:
-            username = fake.first_name()
+#         username = fake.first_name()
+#         while username in usernames:
+#             username = fake.first_name()
         
-        usernames.append(username)
+#         usernames.append(username)
 
-        user = User(username=username)
-        users.append(user)
+#         user = User(username=username)
+#         users.append(user)
 
-    db.session.add_all(users)
+#     db.session.add_all(users)
 
-    print("Creating articles...")
-    articles = []
-    for i in range(100):
-        content = fake.paragraph(nb_sentences=8)
-        preview = content[:25] + '...'
+#     print("Creating articles...")
+#     articles = []
+#     for i in range(100):
+#         content = fake.paragraph(nb_sentences=8)
+#         preview = content[:25] + '...'
         
-        article = Article(
-            author=fake.name(),
-            title=fake.sentence(),
-            content=content,
-            preview=preview,
-            minutes_to_read=randint(1,20),
-            is_member_only = rc([True, False, False])
-        )
+#         article = Article(
+#             author=fake.name(),
+#             title=fake.sentence(),
+#             content=content,
+#             preview=preview,
+#             minutes_to_read=randint(1,20),
+#             is_member_only = rc([True, False, False])
+#         )
 
-        articles.append(article)
+#         articles.append(article)
 
-    db.session.add_all(articles)
+#     db.session.add_all(articles)
     
+#     db.session.commit()
+#     print("Complete.")
+
+
+from app import db
+from models import User
+
+# Check if the User table is empty
+if User.query.first() is None:
+    # Create a new user if none exist
+    user = User(username='testuser', password='password')
+    db.session.add(user)
     db.session.commit()
-    print("Complete.")
+
+print("Seed completed!")
